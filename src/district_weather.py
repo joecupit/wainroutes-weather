@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup, ResultSet, Tag
 
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -31,7 +32,7 @@ def scrape_met_site(save_local=False):
 def scrape_soup(soup: BeautifulSoup):
   weather_data = dict()
 
-  weather_data["update_time"] = get_tag_text_by_class(soup, "issue-time", "time")
+  weather_data["issue_time"] = get_tag_text_by_class(soup, "issue-time", "time")
   weather_data["confidence"] = get_p_text_by_class(soup, "confidence")
 
   days = []
@@ -40,6 +41,8 @@ def scrape_soup(soup: BeautifulSoup):
     if isinstance(day, Tag):
       days.append(scrape_day(day))
   weather_data["days"] = days
+
+  weather_data["update_time"] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
   return weather_data
 
@@ -124,7 +127,7 @@ def scrape_day_forecast(forecast: Tag):
   if (six_am > 0):
     times = times[six_am:]
     weather_types = weather_types[six_am:]
-    precip_chances = precip_chances[six_am:]
+    precip_chances = ["<5%" if p == "<05%" else p for p in precip_chances[six_am:]]
     wind_speeds = wind_speeds[six_am:]
     wind_gusts = wind_gusts[six_am:]
     wind_dirs = wind_dirs[six_am:]
