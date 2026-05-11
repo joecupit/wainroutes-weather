@@ -2,7 +2,7 @@ from bs4 import Tag
 from typing import Callable
 import re
 
-from utils.get_tags import (
+from src.utils.get_tags import (
     get_tag_by_class,
     get_all_tags_by_class,
     get_tag_in_tag,
@@ -12,7 +12,7 @@ from utils.get_tags import (
 )
 
 
-def forecast_row_parser(row: Tag):
+def forecast_row_parser(row: Tag) -> list[str]:
     values = []
     for td in [td for td in get_all_tags_in_tag(row, "td")]:
         td_text = get_text_from_tag(td)
@@ -26,7 +26,7 @@ def forecast_row_parser(row: Tag):
     return values
 
 
-def wind_row_parser(row: Tag, parse_directions=False):
+def wind_row_parser(row: Tag, parse_directions=False) -> list[str | int]:
     values = []
     for td in [td for td in get_all_tags_in_tag(row, "td")]:
         if parse_directions:
@@ -45,7 +45,7 @@ def wind_row_parser(row: Tag, parse_directions=False):
     return values
 
 
-def temperature_row_parser(row: Tag):
+def temperature_row_parser(row: Tag) -> list[int]:
     values = []
     for td in [td for td in get_all_tags_in_tag(row, "td")]:
         if row["data-label"] == "height":
@@ -59,7 +59,9 @@ def temperature_row_parser(row: Tag):
     return values
 
 
-def get_all_rows_by_class(tag: Tag | None, table_class_name: str, row_parser: Callable):
+def get_all_rows_by_class(
+    tag: Tag | None, table_class_name: str, row_parser: Callable
+) -> dict[str, list[str | int]]:
     table_body = get_tag_in_tag(get_tag_by_class(tag, table_class_name), "tbody")
 
     table_rows = {}
@@ -157,7 +159,7 @@ def parse_current_weather(mountain_forecast: Tag, tab_info):
         get_tag_by_class(mountain_forecast, "mountain-hazard"), "accordion"
     )
     hazard_levels = [
-        get_text_from_tag(header).split()[0]
+        get_text_from_tag(header).split()[0].strip().lower()
         for header in get_all_tags_by_class(mountain_hazard, "accordion-header")
     ]
     hazard_hazards = [

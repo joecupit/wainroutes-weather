@@ -6,13 +6,13 @@ import json
 from dotenv import load_dotenv
 from datetime import datetime
 
-from utils.get_tags import (
+from src.utils.get_tags import (
     get_tag_by_class,
     get_tag_in_tag,
     get_all_tags_in_tag,
     get_text_from_tag,
 )
-from utils.scrape_days import (
+from src.utils.scrape_days import (
     parse_evening_weather,
     parse_current_weather,
     parse_tomorrow_weather,
@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 
 def request_met_site() -> Tag | None:
-    log.info("Scraping Met Office weather data")
+    log.info("Scraping Met Office weather data...")
     response = requests.get(os.environ["MET_OFFICE_WEATHER_URL"])
     if response.status_code != 200:
         log.error(f"Failed to retrieve data. Status code: {response.status_code}")
