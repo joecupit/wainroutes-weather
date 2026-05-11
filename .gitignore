@@ -8,5 +8,5 @@ __pycache__/
 .env
 
 # output files
-weather.json
-weather_points.json
+weather*.json
+weather_points*.json
