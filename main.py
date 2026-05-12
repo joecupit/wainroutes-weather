@@ -13,12 +13,12 @@ from src.utils.r2_bucket import upload_to_bucket
 load_dotenv()
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s (%(name)s) : %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s %(message)s (%(name)s)"
 )
 log = logging.getLogger(__name__)
 
 
-def main(skip_scrape = False, skip_points = False):
+def main(skip_scrape=False, skip_points=False):
     log.info("Starting job.")
 
     log.info("Connecting to boto3 client...")

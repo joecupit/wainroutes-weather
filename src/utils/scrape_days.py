@@ -155,19 +155,19 @@ def parse_current_weather(mountain_forecast: Tag, tab_info):
         mountain_forecast, "meteorologist-view"
     )
 
-    mountain_hazard = get_tag_by_class(
+    mountain_hazard_groups = get_all_tags_by_class(
         get_tag_by_class(mountain_forecast, "mountain-hazard"), "accordion"
     )
     hazard_levels = [
-        get_text_from_tag(header).split()[0].strip().lower()
-        for header in get_all_tags_by_class(mountain_hazard, "accordion-header")
+        get_text_from_tag(get_tag_by_class(group, "accordion-header")).split()[0].strip().lower()
+        for group in mountain_hazard_groups
     ]
     hazard_hazards = [
         [
             get_text_from_tag(header)
-            for header in get_all_tags_by_class(panel, "hazard-header")
+            for header in get_all_tags_by_class(group, "hazard-header")
         ]
-        for panel in get_all_tags_by_class(mountain_hazard, "accordion-panel")
+        for group in mountain_hazard_groups
     ]
     hazards = {hazard_levels[i]: hazard_hazards[i] for i in range(len(hazard_levels))}
 
